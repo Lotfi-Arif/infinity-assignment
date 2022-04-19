@@ -7,7 +7,19 @@ import {
   LOGOUT_USER,
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
-  UPDATE_USER_ERROR
+  UPDATE_USER_ERROR,
+  CREATE_TASK_BEGIN,
+  CREATE_TASK_SUCCESS,
+  CREATE_TASK_ERROR,
+  GET_TASKS_BEGIN,
+  GET_TASKS_SUCCESS,
+  SET_EDIT_TASK,
+  DELETE_TASK_BEGIN,
+  EDIT_TASK_BEGIN,
+  EDIT_TASK_SUCCESS,
+  EDIT_TASK_ERROR,
+  HANDLE_CHANGE,
+  CLEAR_VALUES
 } from './actions'
 
 import { initialState } from './appContext'
@@ -75,6 +87,95 @@ const reducer = (state, action) => {
     }
   }
   if (action.type === UPDATE_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
+    }
+  }
+  if (action.type === HANDLE_CHANGE) {
+    return {
+      ...state,
+      page: 1,
+      [action.payload.name]: action.payload.value,
+    }
+  }
+  if (action.type === CREATE_TASK_BEGIN) {
+    return { ...state, isLoading: true }
+  }
+  if (action.type === CREATE_TASK_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: 'New Task Created!',
+    }
+  }
+  if (action.type === CLEAR_VALUES) {
+    const initialState = {
+      isEditing: false,
+      title: '',
+      description: ''
+    }
+
+    return {
+      ...state,
+      ...initialState,
+    }
+  }
+  if (action.type === CREATE_TASK_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
+    }
+  }
+  if (action.type === GET_TASKS_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false }
+  }
+  if (action.type === GET_TASKS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      tasks: action.payload.tasks,
+      totalTasks: action.payload.totalTasks
+    }
+  }
+  if (action.type === SET_EDIT_TASK) {
+    const task = state.tasks.find((task) => task._id === action.payload.id)
+    const { _id, title, description } = task
+    return {
+      ...state,
+      isEditing: true,
+      editTaskId: _id,
+      title,
+      description
+    }
+  }
+  if (action.type === DELETE_TASK_BEGIN) {
+    return { ...state, isLoading: true }
+  }
+  if (action.type === EDIT_TASK_BEGIN) {
+    return {
+      ...state,
+      isLoading: true,
+    }
+  }
+  if (action.type === EDIT_TASK_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: 'Task Updated!',
+    }
+  }
+  if (action.type === EDIT_TASK_ERROR) {
     return {
       ...state,
       isLoading: false,

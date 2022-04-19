@@ -13,6 +13,17 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
+  CREATE_TASK_BEGIN,
+  CREATE_TASK_SUCCESS,
+  CREATE_TASK_ERROR,
+  GET_TASKS_BEGIN,
+  GET_TASKS_SUCCESS,
+  SET_EDIT_TASK,
+  DELETE_TASK_BEGIN,
+  EDIT_TASK_BEGIN,
+  EDIT_TASK_SUCCESS,
+  EDIT_TASK_ERROR,
+  CLEAR_VALUES
 } from './actions'
 
 const token = localStorage.getItem('token')
@@ -23,6 +34,15 @@ const initialState = {
   showAlert: false,
   alertText: '',
   alertType: '',
+  editTaskId: '',
+  title: '',
+  description: '',
+  search: '',
+  tasks: [],
+  numOfPages: 1,
+  page: 1,
+  isEditing: false,
+  totalTasks: 0,
   user: user ? JSON.parse(user) : null,
   token: token
 }
@@ -106,6 +126,9 @@ const AppProvider = ({ children }) => {
     dispatch({ type: LOGOUT_USER })
     removeUserFromLocalStorage()
   }
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES })
+  }
   const updateUser = async (currentUser) => {
     dispatch({ type: UPDATE_USER_BEGIN })
     try {
@@ -132,6 +155,85 @@ const AppProvider = ({ children }) => {
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
   }
+
+  const createTask = async () => {
+    dispatch({ type: CREATE_TASK_BEGIN })
+    try {
+      const { description, title } = state
+      await authFetch.post('/tasks', {
+        title,
+        description
+      })
+      dispatch({ type: CREATE_TASK_SUCCESS })
+      dispatch({ type: CLEAR_VALUES })
+    } catch (error) {
+      if (error.response.status === 401) return
+      dispatch({
+        type: CREATE_TASK_ERROR,
+        payload: { msg: error.response.data.msg },
+      })
+    }
+    clearAlert()
+  }
+
+  const getTasks = async () => {
+    const { page, search } = state
+
+    let url = `/tasks?page=${page}`
+    if (search) {
+      url = url + `&search=${search}`
+    }
+    dispatch({ type: GET_TASKS_BEGIN })
+    try {
+      const { data } = await authFetch(url)
+      const { tasks, totalTasks, numOfPages } = data
+      dispatch({
+        type: GET_TASKS_SUCCESS,
+        payload: {
+          tasks,
+          totalTasks,
+          numOfPages
+        },
+      })
+    } catch (error) {
+      logoutUser()
+    }
+    clearAlert()
+  }
+
+  const setEditTask = (id) => {
+    dispatch({ type: SET_EDIT_TASK, payload: { id } })
+  }
+  const editTask = async () => {
+    dispatch({ type: EDIT_TASK_BEGIN })
+
+    try {
+      const { description, title } = state
+      await authFetch.patch(`/tasks/${state.editTaskId}`, {
+        title,
+        description
+      })
+      dispatch({ type: EDIT_TASK_SUCCESS })
+      dispatch({ type: CLEAR_VALUES })
+    } catch (error) {
+      if (error.response.status === 401) return
+      dispatch({
+        type: EDIT_TASK_ERROR,
+        payload: { msg: error.response.data.msg },
+      })
+    }
+    clearAlert()
+  }
+  const deleteTask = async (taskId) => {
+    dispatch({ type: DELETE_TASK_BEGIN })
+    try {
+      await authFetch.delete(`/tasks/${taskId}`)
+      getTasks()
+    } catch (error) {
+      logoutUser()
+    }
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -140,7 +242,13 @@ const AppProvider = ({ children }) => {
         setupUser,
         logoutUser,
         updateUser,
-        handleChange
+        handleChange,
+        createTask,
+        getTasks,
+        setEditTask,
+        deleteTask,
+        editTask,
+        clearValues
       }}
     >
       {children}

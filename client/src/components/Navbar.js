@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 const navigation = [
   { id: 1, name: 'Landing', href: '/', current: true, isVisible: false },
-  { id: 2, name: 'Todo List', href: 'all-jobs', current: false, isVisible: false }
+  { id: 2, name: 'Todo List', href: 'todo-list', current: false, isVisible: false }
 ]
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')

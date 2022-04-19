@@ -7,9 +7,7 @@ import {
   LOGOUT_USER,
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
-  UPDATE_USER_ERROR,
-  HANDLE_CHANGE,
-  CHANGE_PAGE,
+  UPDATE_USER_ERROR
 } from './actions'
 
 import { initialState } from './appContext'
@@ -84,16 +82,6 @@ const reducer = (state, action) => {
       alertType: 'danger',
       alertText: action.payload.msg,
     }
-  }
-  if (action.type === HANDLE_CHANGE) {
-    return {
-      ...state,
-      page: 1,
-      [action.payload.name]: action.payload.value,
-    }
-  }
-  if (action.type === CHANGE_PAGE) {
-    return { ...state, page: action.payload.page }
   }
   throw new Error(`no such action : ${action.type}`)
 }

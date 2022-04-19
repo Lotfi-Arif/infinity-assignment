@@ -13,12 +13,10 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   HANDLE_CHANGE,
-  CHANGE_PAGE,
 } from './actions'
 
 const token = localStorage.getItem('token')
 const user = localStorage.getItem('user')
-const userLocation = localStorage.getItem('location')
 
 const initialState = {
   isLoading: false,
@@ -26,17 +24,7 @@ const initialState = {
   alertText: '',
   alertType: '',
   user: user ? JSON.parse(user) : null,
-  token: token,
-  userLocation: userLocation || '',
-  showSidebar: false,
-  isEditing: false,
-  numOfPages: 1,
-  page: 1,
-  search: '',
-  searchStatus: 'all',
-  searchType: 'all',
-  sort: 'latest',
-  sortOptions: ['latest', 'oldest', 'a-z', 'z-a'],
+  token: token
 }
 
 const AppContext = React.createContext()
@@ -85,16 +73,14 @@ const AppProvider = ({ children }) => {
     }, 3000)
   }
 
-  const addUserToLocalStorage = ({ user, token, location }) => {
+  const addUserToLocalStorage = ({ user, token }) => {
     localStorage.setItem('user', JSON.stringify(user))
     localStorage.setItem('token', token)
-    localStorage.setItem('location', location)
   }
 
   const removeUserFromLocalStorage = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('user')
-    localStorage.removeItem('location')
   }
 
   const setupUser = async ({ currentUser, endPoint, alertText }) => {
@@ -102,12 +88,12 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await axios.post(`/api/v1/auth/${endPoint}`, currentUser)
 
-      const { user, token, location } = data
+      const { user, token } = data
       dispatch({
         type: SETUP_USER_SUCCESS,
-        payload: { user, token, location, alertText },
+        payload: { user, token, alertText },
       })
-      addUserToLocalStorage({ user, token, location })
+      addUserToLocalStorage({ user, token })
     } catch (error) {
       dispatch({
         type: SETUP_USER_ERROR,
@@ -125,13 +111,13 @@ const AppProvider = ({ children }) => {
     try {
       const { data } = await authFetch.patch('/auth/updateUser', currentUser)
 
-      const { user, location, token } = data
+      const { user, token } = data
 
       dispatch({
         type: UPDATE_USER_SUCCESS,
-        payload: { user, location, token },
+        payload: { user, token },
       })
-      addUserToLocalStorage({ user, location, token })
+      addUserToLocalStorage({ user, token })
     } catch (error) {
       if (error.response.status !== 401) {
         dispatch({
@@ -146,9 +132,6 @@ const AppProvider = ({ children }) => {
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
   }
-  const changePage = (page) => {
-    dispatch({ type: CHANGE_PAGE, payload: { page } })
-  }
   return (
     <AppContext.Provider
       value={{
@@ -157,8 +140,7 @@ const AppProvider = ({ children }) => {
         setupUser,
         logoutUser,
         updateUser,
-        handleChange,
-        changePage,
+        handleChange
       }}
     >
       {children}

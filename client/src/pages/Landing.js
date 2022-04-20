@@ -5,7 +5,7 @@ const Landing = () => {
     <div>
       <Navbar />
       <div className='grid place-items-center h-screen mb-2'>
-        <img src={Logos} alt='GDSC UTM' className='h-24 w-24 mx-auto' />
+        <img src={Logos} alt='React Test' className='h-24 w-24 mx-auto' />
         <article className='m-auto p-2 mx-auto text-justify'>
           <h1 className='text-5xl font-bold text-center text-gray-900'>
             Infinity Wave Assignment

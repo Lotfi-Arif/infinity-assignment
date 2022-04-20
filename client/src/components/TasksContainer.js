@@ -2,6 +2,7 @@ import { useAppContext } from '../context/appContext'
 import { useEffect } from 'react'
 import Loading from './Loading'
 import Task from './Task'
+import Navbar from './Navbar'
 import PageBtnContainer from './PageBtnContainer'
 
 const TasksContainer = () => {
@@ -32,6 +33,7 @@ const TasksContainer = () => {
 
   return (
     <div>
+      <Navbar />
       <h5>
         {totalTasks} task{tasks.length > 1 && 's'} found
       </h5>

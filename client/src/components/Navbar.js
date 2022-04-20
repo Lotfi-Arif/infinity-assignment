@@ -3,21 +3,21 @@ import logo from '../assets/images/logo.svg'
 import { useState } from 'react'
 import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import { MenuIcon, XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
 
+
 const navigation = [
-  { id: 1, name: 'Landing', href: '/', current: true, isVisible: false },
-  { id: 2, name: 'Todo List', href: 'todo-list', current: false, isVisible: false }
+  { id: 1, name: 'Landing', href: '/', current: true },
+  { id: 2, name: 'Todo List', href: 'todo-list', current: false }
 ]
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
 
 const Navbar = () => {
-  const [showProfile, setShowProfile] = useState(false)
-//   const { logoutUser, user } = useAppContext()
-const user = true;
+  const [showProfile] = useState(false)
+  const { logoutUser, user } = useAppContext()
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -40,12 +40,12 @@ const user = true;
                   <img
                     className="block lg:hidden h-8 w-auto"
                     src={logo}
-                    alt="GDSC"
+                    alt="Test"
                   />
                   <img
                     className="hidden lg:block h-8 w-auto"
                     src={logo}
-                    alt="GDSC"
+                    alt="Test"
                   />
                 </div>
                 <div className="hidden sm:block sm:ml-6">
@@ -68,42 +68,6 @@ const user = true;
                 </div>
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* Notification dropdown */}
-                <Menu as="div" className="ml-3 relative">
-                  <div>
-                    <Menu.Button className='bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white'>
-                      <button
-                        type="button"
-                        className="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
-                      >
-                        <span className="sr-only">View notifications</span>
-                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                      </button>
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            className={classNames(active && showProfile ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                          >
-                            There are no notifications yet.
-                          </a>
-                        )}
-                      </Menu.Item>
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
-
                 {/* Profile dropdown */}
                 {
                   user ?
@@ -130,32 +94,22 @@ const user = true;
                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <Menu.Item>
                             {({ active }) => (
-                              <a
+                              <p
                                 className={classNames(active && showProfile ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                               >
                                 {user?.name}
-                              </a>
+                              </p>
                             )}
                           </Menu.Item>
                           <Menu.Item>
                             {({ active }) => (
-                              <a
-                                href="/profile"
-                                className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
-                              >
-                                Profile
-                              </a>
-                            )}
-                          </Menu.Item>
-                          <Menu.Item>
-                            {({ active }) => (
-                              <a
+                              <p
                                 className={classNames(active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700')}
                               >
                                 <button type='button' className='dropdown-btn'>
                                   Logout
                                 </button>
-                              </a>
+                              </p>
                             )}
                           </Menu.Item>
                         </Menu.Items>

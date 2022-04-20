@@ -41,6 +41,7 @@ app.use(xss())
 app.use(mongoSanitize())
 
 app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/tasks', authenticateUser, taskRouter)
 
 // only when ready to deploy
 // app.get('*', (req, res) => {

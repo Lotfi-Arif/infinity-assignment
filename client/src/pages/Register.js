@@ -62,7 +62,7 @@ const Register = () => {
           <img
             className="h-auto w-auto mx-auto mt-6 mb-6"
             src={logo}
-            alt="GDSC"
+            alt="Test"
           />
           <h3 className="text-2xl font-bold text-center">{values.isMember ? 'Login' : 'Register'}</h3>
           {showAlert && <Alert />}

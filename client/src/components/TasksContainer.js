@@ -14,6 +14,7 @@ const TasksContainer = () => {
     totalTasks,
     search,
     numOfPages,
+    completed
   } = useAppContext()
   useEffect(() => {
     getTasks()
@@ -33,16 +34,13 @@ const TasksContainer = () => {
 
   return (
     <div>
-      <Navbar />
-      <h5>
-        {totalTasks} task{tasks.length > 1 && 's'} found
-      </h5>
-      <div className='tasks'>
-        {tasks.map((task) => {
-          return <Task key={task._id} {...task} />
-        })}
+      <div>
+        <div className="flex mb-4 items-center">
+          <p className="w-full text-grey-darkest">{tasks.map((task) => {
+            return <Task key={task._id} {...task} />
+          })}</p>
+        </div>
       </div>
-      {numOfPages > 1 && <PageBtnContainer />}
     </div>
   )
 }

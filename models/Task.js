@@ -6,14 +6,15 @@ const taskSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        description: {
-            type: String,
-            required: true,
-        },
         completed: {
             type: Boolean,
             default: false,
-        }
+        },
+        createdBy: {
+          type: mongoose.Types.ObjectId,
+          ref: 'User',
+          required: [true, 'Please provide user'],
+        },
     });
 
 export default mongoose.model('Task', taskSchema);

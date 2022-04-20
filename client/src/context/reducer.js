@@ -117,8 +117,7 @@ const reducer = (state, action) => {
   if (action.type === CLEAR_VALUES) {
     const initialState = {
       isEditing: false,
-      title: '',
-      description: ''
+      title: ''
     }
 
     return {
@@ -148,13 +147,12 @@ const reducer = (state, action) => {
   }
   if (action.type === SET_EDIT_TASK) {
     const task = state.tasks.find((task) => task._id === action.payload.id)
-    const { _id, title, description } = task
+    const { _id, title } = task
     return {
       ...state,
       isEditing: true,
       editTaskId: _id,
-      title,
-      description
+      title
     }
   }
   if (action.type === DELETE_TASK_BEGIN) {

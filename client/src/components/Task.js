@@ -1,47 +1,32 @@
-import { FaTint, FaArrowDown } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { useAppContext } from '../context/appContext'
-import TaskInfo from './TaskInfo'
 
 const Task = ({
   _id,
-  title,
-  description
+  title
 }) => {
   const { setEditTask, deleteTask } = useAppContext()
 
   return (
     <div>
-      <header>
-        <div className='main-icon'>{title.charAt(0)}</div>
-        <div className='info'>
-          <h5>{title}</h5>
-          <p>{description}</p>
-        </div>
-      </header>
       <div className='content'>
-        <div className='content-center'>
-          <TaskInfo icon={<FaTint />} text={title} />
-          <TaskInfo icon={<FaArrowDown />} text={description} />
-        </div>
-        <footer>
-          <div className='actions'>
+          <div className='flex p-2'>
+          <p class="w-full text-green">{title}</p>
             <Link
               to='/add-task'
-              className='btn edit-btn'
+              className='flex-no-shrink text-white bg-green-500 hover:bg-green-600 mx-6 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center'
               onClick={() => setEditTask(_id)}
             >
-              Edit
+              Done
             </Link>
             <button
               type='button'
-              className='btn delete-btn'
+              className='text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center'
               onClick={() => deleteTask(_id)}
             >
-              Delete
+              Remove
             </button>
           </div>
-        </footer>
       </div>
     </div>
   )

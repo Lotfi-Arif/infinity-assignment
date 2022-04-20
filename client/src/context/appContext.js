@@ -36,11 +36,11 @@ const initialState = {
   alertType: '',
   editTaskId: '',
   title: '',
-  description: '',
   search: '',
   tasks: [],
   numOfPages: 1,
   page: 1,
+  completed: false,
   isEditing: false,
   totalTasks: 0,
   user: user ? JSON.parse(user) : null,
@@ -159,10 +159,9 @@ const AppProvider = ({ children }) => {
   const createTask = async () => {
     dispatch({ type: CREATE_TASK_BEGIN })
     try {
-      const { description, title } = state
+      const { title } = state
       await authFetch.post('/tasks', {
-        title,
-        description
+        title
       })
       dispatch({ type: CREATE_TASK_SUCCESS })
       dispatch({ type: CLEAR_VALUES })
@@ -208,10 +207,9 @@ const AppProvider = ({ children }) => {
     dispatch({ type: EDIT_TASK_BEGIN })
 
     try {
-      const { description, title } = state
+      const { title } = state
       await authFetch.patch(`/tasks/${state.editTaskId}`, {
-        title,
-        description
+        title
       })
       dispatch({ type: EDIT_TASK_SUCCESS })
       dispatch({ type: CLEAR_VALUES })

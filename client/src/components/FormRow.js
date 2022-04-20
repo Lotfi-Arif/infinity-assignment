@@ -1,6 +1,6 @@
 const FormRow = ({ type, name, value, handleChange, labelText }) => {
     return (
-      <div className='form-row'>
+      <>
         <label htmlFor={name} className='capitalize'>
           {labelText || name}
         </label>
@@ -9,9 +9,9 @@ const FormRow = ({ type, name, value, handleChange, labelText }) => {
           value={value}
           name={name}
           onChange={handleChange}
-          className='z-auto w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600'
+          className='shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker'
         />
-      </div>
+      </>
     )
   }
   

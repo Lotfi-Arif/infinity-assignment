@@ -28,7 +28,7 @@ const Navbar = () => {
                 {/* Mobile menu button*/}
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
-                  {open ? (
+                  {!open ? (
                     <XIcon className="block h-6 w-6" aria-hidden="true" />
                   ) : (
                     <MenuIcon className="block h-6 w-6" aria-hidden="true" />
@@ -51,7 +51,7 @@ const Navbar = () => {
                 <div className="hidden sm:block sm:ml-6">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      user && item.id < 5 ?
+                      user ?
                         <a
                           key={item.name}
                           href={item.href}

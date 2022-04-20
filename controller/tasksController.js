@@ -6,9 +6,9 @@ import {
 } from '../errors/index.js'
 import checkPermissions from '../utils/checkPermissions.js'
 const createTask = async (req, res) => {
-  const { title, description } = req.body
+  const { title } = req.body
 
-  if (!title || !description) {
+  if (!title) {
     throw new BadRequestError('Please provide all values')
   }
   req.body.createdBy = req.user.userId
@@ -16,7 +16,7 @@ const createTask = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ task })
 }
 const getAllTasks = async (req, res) => {
-  const { title, description, search } = req.query
+  const { title, search } = req.query
 
   const queryObject = {
     createdBy: req.user.userId,
@@ -24,9 +24,6 @@ const getAllTasks = async (req, res) => {
   // add stuff based on condition
   if (title && title !== '') {
     queryObject.title = title
-  }
-  if (description && description !== '') {
-    queryObject.description = description
   }
 
   if (search) {
@@ -52,9 +49,9 @@ const getAllTasks = async (req, res) => {
 }
 const updateTask = async (req, res) => {
   const { id: taskId } = req.params
-  const { title, description } = req.body
+  const { title } = req.body
 
-  if (!title || !description) {
+  if (!title) {
     throw new BadRequestError('Please provide all values')
   }
   const task = await Task.findOne({ _id: taskId })

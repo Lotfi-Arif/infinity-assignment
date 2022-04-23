@@ -16,7 +16,7 @@ const createTask = async (req, res) => {
   res.status(StatusCodes.CREATED).json({ task })
 }
 const getAllTasks = async (req, res) => {
-  const { title, search } = req.query
+  const { title } = req.query
 
   const queryObject = {
     createdBy: req.user.userId,
@@ -26,40 +26,23 @@ const getAllTasks = async (req, res) => {
     queryObject.title = title
   }
 
-  if (search) {
-    queryObject.position = { $regex: search, $options: 'i' }
-  }
-  // NO AWAIT
-
   let result = Task.find(queryObject)
-
-  // setup pagination
-  const page = Number(req.query.page) || 1
-  const limit = Number(req.query.limit) || 10
-  const skip = (page - 1) * limit
-
-  result = result.skip(skip).limit(limit)
 
   const tasks = await result
 
   const totalTasks = await Task.countDocuments(queryObject)
-  const numOfPages = Math.ceil(totalTasks / limit)
 
-  res.status(StatusCodes.OK).json({ tasks, totalTasks, numOfPages })
+  res.status(StatusCodes.OK).json({ tasks, totalTasks })
 }
 const updateTask = async (req, res) => {
   const { id: taskId } = req.params
-  const { title } = req.body
-
-  if (!title) {
-    throw new BadRequestError('Please provide all values')
-  }
+  // const { completed } = req.body
+  
   const task = await Task.findOne({ _id: taskId })
 
   if (!task) {
     throw new NotFoundError(`No task with id :${taskId}`)
   }
-  // check permissions
 
   checkPermissions(req.user, task.createdBy)
 

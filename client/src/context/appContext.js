@@ -18,10 +18,9 @@ import {
   CREATE_TASK_ERROR,
   GET_TASKS_BEGIN,
   GET_TASKS_SUCCESS,
-  SET_EDIT_TASK,
+  SET_DONE_TASK,
   DELETE_TASK_BEGIN,
   EDIT_TASK_BEGIN,
-  EDIT_TASK_SUCCESS,
   EDIT_TASK_ERROR,
   CLEAR_VALUES
 } from './actions'
@@ -172,52 +171,47 @@ const AppProvider = ({ children }) => {
         payload: { msg: error.response.data.msg },
       })
     }
+    getTasks()
     clearAlert()
   }
 
   const getTasks = async () => {
-    const { page, search } = state
 
-    let url = `/tasks?page=${page}`
-    if (search) {
-      url = url + `&search=${search}`
-    }
+    let url = `/tasks`
+  
     dispatch({ type: GET_TASKS_BEGIN })
     try {
-      const { data } = await authFetch(url)
-      const { tasks, totalTasks, numOfPages } = data
+      const { data } = await authFetch.get(url)
+      const { tasks, totalTasks } = data
       dispatch({
         type: GET_TASKS_SUCCESS,
         payload: {
           tasks,
-          totalTasks,
-          numOfPages
+          totalTasks
         },
       })
     } catch (error) {
-      logoutUser()
+      console.log(error)
     }
     clearAlert()
   }
 
   const setEditTask = (id) => {
-    dispatch({ type: SET_EDIT_TASK, payload: { id } })
+    dispatch({ type: SET_DONE_TASK, payload: { id } })
   }
-  const editTask = async () => {
+  const editTask = async (task) => {
     dispatch({ type: EDIT_TASK_BEGIN })
 
     try {
-      const { title } = state
-      await authFetch.patch(`/tasks/${state.editTaskId}`, {
-        title
-      })
-      dispatch({ type: EDIT_TASK_SUCCESS })
-      dispatch({ type: CLEAR_VALUES })
+      const updatedTodo = { completed: !task.completed }
+      await authFetch.put(`/tasks/${task._id}`, updatedTodo)
+      dispatch({ type: SET_DONE_TASK, payload: {...task, completed:!task.completed} })
+
     } catch (error) {
-      if (error.response.status === 401) return
+      if (error.response?.status === 401) return
       dispatch({
         type: EDIT_TASK_ERROR,
-        payload: { msg: error.response.data.msg },
+        payload: { msg: error.response?.data.msg },
       })
     }
     clearAlert()

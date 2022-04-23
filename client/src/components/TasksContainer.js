@@ -2,24 +2,22 @@ import { useAppContext } from '../context/appContext'
 import { useEffect } from 'react'
 import Loading from './Loading'
 import Task from './Task'
-import Navbar from './Navbar'
-import PageBtnContainer from './PageBtnContainer'
+
+
+const TaskList = ({ tasks }) => {
+  return tasks?.map((task) => <Task key={task._id} {...task} />)
+}
 
 const TasksContainer = () => {
   const {
     getTasks,
     tasks,
     isLoading,
-    page,
-    totalTasks,
-    search,
-    numOfPages,
-    completed
+    page
   } = useAppContext()
   useEffect(() => {
     getTasks()
-    // eslint-disable-next-line
-  }, [page, search])
+  }, [page])
   if (isLoading) {
     return <Loading center />
   }
@@ -32,16 +30,26 @@ const TasksContainer = () => {
     )
   }
 
+
+
   return (
-    <div>
-      <div>
-        <div className="flex mb-4 items-center">
-          <p className="w-full text-grey-darkest">{tasks.map((task) => {
-            return <Task key={task._id} {...task} />
-          })}</p>
-        </div>
+    <>
+      <table class="table-auto">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Deadline</th>
+            <th>Done?</th>
+            <th>Remove</th>
+          </tr>
+        </thead>
+      </table>
+      <div className="flex mb-4 items-center">
+        <p className="w-full text-grey-darkest">
+          <TaskList tasks={tasks} />
+        </p>
       </div>
-    </div>
+    </>
   )
 }
 

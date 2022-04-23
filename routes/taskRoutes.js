@@ -10,6 +10,6 @@ import {
 
 router.route('/').post(createTask).get(getAllTasks)
 // remember about :id
-router.route('/:id').delete(deleteTask).patch(updateTask)
+router.route('/:id').delete(deleteTask).put(updateTask)
 
 export default router

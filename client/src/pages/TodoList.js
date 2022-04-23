@@ -13,8 +13,7 @@ const TodoList = () => {
     title,
     handleChange,
     createTask,
-    editTask,
-    completed
+    editTask
   } = useAppContext()
 
   const handleSubmit = (e) => {
@@ -30,6 +29,7 @@ const TodoList = () => {
     }
     createTask()
   }
+  
   const handleTaskInput = (e) => {
     const name = e.target.name
     const value = e.target.value
@@ -39,7 +39,7 @@ const TodoList = () => {
   return (
     <>
       <Navbar />
-      <div className='w-full max-w-xl mx-auto my-auto'>
+      <div className='w-full max-w-5xl mx-auto my-auto'>
         <form className='bg-white shadow-xl rounded px-8 pt-6 pb-8 mb-4'>
           <div className='mx-auto'>
             <div className="mb-4">
@@ -54,7 +54,7 @@ const TodoList = () => {
                   name='title'
                   value={title}
                   onChange={handleTaskInput}
-                  className='shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker'
+                  className= 'shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker'
                 />
                 <button type='submit' onClick={handleSubmit} disabled={isLoading} className="flex-no-shrink text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center">Add</button>
               </div>

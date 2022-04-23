@@ -13,10 +13,9 @@ import {
   CREATE_TASK_ERROR,
   GET_TASKS_BEGIN,
   GET_TASKS_SUCCESS,
-  SET_EDIT_TASK,
+  SET_DONE_TASK,
   DELETE_TASK_BEGIN,
   EDIT_TASK_BEGIN,
-  EDIT_TASK_SUCCESS,
   EDIT_TASK_ERROR,
   HANDLE_CHANGE,
   CLEAR_VALUES
@@ -145,14 +144,17 @@ const reducer = (state, action) => {
       totalTasks: action.payload.totalTasks
     }
   }
-  if (action.type === SET_EDIT_TASK) {
-    const task = state.tasks.find((task) => task._id === action.payload.id)
-    const { _id, title } = task
+  if (action.type === SET_DONE_TASK) {
+    const updatedTaskList = state.tasks.map((task) => {
+      if (task._id === action.payload._id) return { ...action.payload } 
+    return {...task} })
     return {
       ...state,
-      isEditing: true,
-      editTaskId: _id,
-      title
+      tasks: updatedTaskList,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'success',
+      alertText: 'Task Updated!',
     }
   }
   if (action.type === DELETE_TASK_BEGIN) {
@@ -162,15 +164,6 @@ const reducer = (state, action) => {
     return {
       ...state,
       isLoading: true,
-    }
-  }
-  if (action.type === EDIT_TASK_SUCCESS) {
-    return {
-      ...state,
-      isLoading: false,
-      showAlert: true,
-      alertType: 'success',
-      alertText: 'Task Updated!',
     }
   }
   if (action.type === EDIT_TASK_ERROR) {

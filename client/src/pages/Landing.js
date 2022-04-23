@@ -19,14 +19,14 @@ const Landing = () => {
               <p className='font-bold'>
                 FrontEnd:
               </p>
-              <ul class="list-disc">
+              <ul className="list-disc">
                 <li>React v18</li>
                 <li>Tailwindcss v3</li>
               </ul>
               <p className='font-bold'>
                 BackEnd:
               </p>
-              <ul class="list-disc">
+              <ul className="list-disc">
                 <li>MongoDB</li>
                 <li>ExpressJs</li>
               </ul>

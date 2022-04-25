@@ -18,7 +18,11 @@ import {
   EDIT_TASK_BEGIN,
   EDIT_TASK_ERROR,
   HANDLE_CHANGE,
-  CLEAR_VALUES
+  CLEAR_VALUES,
+  HANDLE_START_DATE_CHANGE,
+  HANDLE_DEADLINE_DATE_CHANGE,
+  HANDLE_START_DATE_ERROR,
+  HANDLE_DEADLINE_DATE_ERROR
 } from './actions'
 
 import { initialState } from './appContext'
@@ -99,6 +103,40 @@ const reducer = (state, action) => {
       ...state,
       page: 1,
       [action.payload.name]: action.payload.value,
+    }
+  }
+  if (action.type === HANDLE_START_DATE_CHANGE) {
+    console.log("Payload:");
+    console.log(action.payload);
+    console.log(action.payload.startDate);
+    console.log("Payload -> StartDate");
+    return {
+      ...state,
+      startDate: action.payload.startDate,
+    }
+  }
+  if (action.type === HANDLE_DEADLINE_DATE_CHANGE) {
+    return {
+      ...state,
+      deadline: action.payload.deadline,
+    }
+  }
+  if (action.type === HANDLE_START_DATE_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
+    }
+  }
+  if (action.type === HANDLE_DEADLINE_DATE_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: 'danger',
+      alertText: action.payload.msg,
     }
   }
   if (action.type === CREATE_TASK_BEGIN) {

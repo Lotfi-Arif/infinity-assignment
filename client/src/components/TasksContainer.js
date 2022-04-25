@@ -32,24 +32,24 @@ const TasksContainer = () => {
 
 
 
+
   return (
-    <>
-      <table class="table-auto">
-        <thead>
+    <div className='relative overflow-x-auto shadow-md sm:rounded-lg'>
+      <table className="w-full text-sm text-left text-slate-700">
+        <thead className='text-xs text-gray-700 uppercase bg-gray-50'>
           <tr>
-            <th>Task</th>
-            <th>Deadline</th>
-            <th>Done?</th>
-            <th>Remove</th>
+            <th scope="col" className="px-6 py-3">Task</th>
+            <th scope="col" className="px-6 py-3">Start Date</th>
+            <th scope="col" className="px-6 py-3">Deadline</th>
+            <th scope="col" className="px-6 py-3">Completed</th>
+            <th scope="col" className="px-6 py-3">Remove</th>
           </tr>
         </thead>
-      </table>
-      <div className="flex mb-4 items-center">
-        <p className="w-full text-grey-darkest">
+        <tbody className='text-center items-center'>
           <TaskList tasks={tasks} />
-        </p>
-      </div>
-    </>
+        </tbody>
+      </table>
+    </div >
   )
 }
 

@@ -20,7 +20,7 @@ const Landing = () => {
                 FrontEnd:
               </p>
               <ul className="list-disc">
-                <li>React v18</li>
+                <li>React v17</li>
                 <li>Tailwindcss v3</li>
               </ul>
               <p className='font-bold'>

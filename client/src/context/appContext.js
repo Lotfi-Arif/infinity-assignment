@@ -1,5 +1,5 @@
 import React, { useReducer, useContext } from 'react'
-
+import moment from "moment";
 import reducer from './reducer'
 import axios from 'axios'
 import {
@@ -22,7 +22,11 @@ import {
   DELETE_TASK_BEGIN,
   EDIT_TASK_BEGIN,
   EDIT_TASK_ERROR,
-  CLEAR_VALUES
+  CLEAR_VALUES,
+  HANDLE_START_DATE_CHANGE,
+  HANDLE_DEADLINE_DATE_CHANGE,
+  HANDLE_START_DATE_ERROR,
+  HANDLE_DEADLINE_DATE_ERROR
 } from './actions'
 
 const token = localStorage.getItem('token')
@@ -37,10 +41,13 @@ const initialState = {
   title: '',
   search: '',
   tasks: [],
+  startDate: null,
+  deadline: null,
   numOfPages: 1,
   page: 1,
   completed: false,
   isEditing: false,
+  createdAt: moment(),
   totalTasks: 0,
   user: user ? JSON.parse(user) : null,
   token: token
@@ -155,12 +162,54 @@ const AppProvider = ({ children }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } })
   }
 
+  const onStartDateChange = async (startDate) => {
+    console.log("OnStartDateChange WORKING", startDate);
+    dispatch({ type: HANDLE_START_DATE_CHANGE, payload: { startDate } })
+    let startDateError;
+
+    try {
+      if (moment(startDate).isValid()) startDateError = "";
+      else if (startDate === '') startDateError = "You must pick a start date!";
+      else startDateError = "Invalid Date!";
+    } catch (error) {
+
+      if (error.response.status !== 401) {
+        dispatch({
+          type: HANDLE_START_DATE_ERROR,
+          payload: { msg: error.response.data.msg },
+        })
+      }
+    }
+  };
+
+  const onDeadlineChange = async (deadline) => {
+    dispatch({ type: HANDLE_DEADLINE_DATE_CHANGE, payload: { deadline } })
+    let deadlineError;
+    
+    try {
+      if (moment(deadline).isValid()) deadlineError = "";
+      else if (deadline === "") deadlineError = "";
+      else deadlineError = "Invalid Date!";
+
+    } catch (error) {
+
+      if (error.response.status !== 401) {
+        dispatch({
+          type: HANDLE_DEADLINE_DATE_ERROR,
+          payload: { msg: error.response.data.msg },
+        })
+      }
+    }
+  };
+
   const createTask = async () => {
     dispatch({ type: CREATE_TASK_BEGIN })
     try {
-      const { title } = state
+      const { title, startDate, deadline } = state
       await authFetch.post('/tasks', {
-        title
+        title,
+        startDate,
+        deadline
       })
       dispatch({ type: CREATE_TASK_SUCCESS })
       dispatch({ type: CLEAR_VALUES })
@@ -178,7 +227,7 @@ const AppProvider = ({ children }) => {
   const getTasks = async () => {
 
     let url = `/tasks`
-  
+
     dispatch({ type: GET_TASKS_BEGIN })
     try {
       const { data } = await authFetch.get(url)
@@ -205,7 +254,7 @@ const AppProvider = ({ children }) => {
     try {
       const updatedTodo = { completed: !task.completed }
       await authFetch.put(`/tasks/${task._id}`, updatedTodo)
-      dispatch({ type: SET_DONE_TASK, payload: {...task, completed:!task.completed} })
+      dispatch({ type: SET_DONE_TASK, payload: { ...task, completed: !task.completed } })
 
     } catch (error) {
       if (error.response?.status === 401) return
@@ -240,7 +289,9 @@ const AppProvider = ({ children }) => {
         setEditTask,
         deleteTask,
         editTask,
-        clearValues
+        clearValues,
+        onDeadlineChange,
+        onStartDateChange
       }}
     >
       {children}
